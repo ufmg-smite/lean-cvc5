@@ -48,9 +48,8 @@ def writeln (bits : List String) := do
       h.putStr bit
   h.putStrLn ""
 
-def writelns (bbits : List (List String)) := do
-  for bits in bbits do
-    writeln h pref bits
+def writelns (bbits : List (List String)) : IO Unit := do
+  bbits.forM (fun bits => writeln h pref bits)
 
 def Doc.writeToLean (doc : Doc) : IO Unit := do
   let wln := writeln h pref
@@ -210,7 +209,7 @@ def newline : Parser Char :=
 
 def lineTail (trimRight := true) : Parser String := do
   let tail ← takeUntil newline
-  return if trimRight then tail.trimRight else tail
+  return if trimRight then tail.trimAsciiEnd.copy else tail
 
 /-! ## Non-doc comments -/
 
@@ -422,9 +421,9 @@ def pfile : Parser Enums := do
   else fail s!"parsed {enums.size} enum(s), but there is some text left"
 
 def prettyError
-  (content : String) (ι : content.ValidPos) (msg : String)
+  (content : String) (ι : content.Pos) (msg : String)
 : IO String := do
-  let pos := Parsec.Input.pos (⟨content, ι⟩ : Sigma String.ValidPos)
+  let pos := Parsec.Input.pos (⟨content, ι⟩ : Sigma String.Pos)
   let map := content.toFileMap
   let position := map.toPosition pos
   let char := String.Pos.Raw.get? content pos
@@ -436,7 +435,7 @@ def prettyError
   let getLine (n : Nat) : String :=
     let startPos := map.positions[n]!
     let endPos := map.positions[n.succ]!
-    String.Pos.Raw.extract content startPos endPos |>.trimRight
+    String.Pos.Raw.extract content startPos endPos |>.trimAsciiEnd.copy
   let line := position.line - 1
   let padding := toString position.line.succ |>.length
   let lpad (line? : Option Nat) : String :=
@@ -459,8 +458,8 @@ def prettyError
     s!"{msg}"
   )
 
-def presentError (content : String) (ι : content.ValidPos) (msg : String) : IO Lean.Position := do
-  let pos := Parsec.Input.pos (⟨content, ι⟩ : Sigma String.ValidPos)
+def presentError (content : String) (ι : content.Pos) (msg : String) : IO Lean.Position := do
+  let pos := Parsec.Input.pos (⟨content, ι⟩ : Sigma String.Pos)
   let map := content.toFileMap
   let position := map.toPosition pos
   let char := String.Pos.Raw.get? content pos
@@ -472,7 +471,7 @@ def presentError (content : String) (ι : content.ValidPos) (msg : String) : IO 
   let getLine (n : Nat) : String :=
     let startPos := map.positions[n]!
     let endPos := map.positions[n.succ]!
-    String.Pos.Raw.extract content startPos endPos |>.trimRight
+    String.Pos.Raw.extract content startPos endPos |>.trimAsciiEnd.copy
   let line := position.line - 1
   let padding := toString position.line.succ |>.length
   let lpad (line? : Option Nat) : String :=
@@ -497,7 +496,7 @@ def parseContentWith (p : Parser α) (content : String) (notEoiFail := true) : I
       Parsec.eof
       return res
     else p
-  match p ⟨content, content.startValidPos⟩ with
+  match p ⟨content, content.startPos⟩ with
   | .success _ a => return a
   | .error ι msg => do
     let pretty ← prettyError ι.fst ι.snd (toString msg)
