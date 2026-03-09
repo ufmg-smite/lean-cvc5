@@ -929,10 +929,10 @@ instance : GetElem DatatypeConstructor Nat DatatypeSelector
 where
   getElem dt idx h := dt.getSelectorAt ⟨idx, h⟩
 
-/- instance : ForIn m DatatypeConstructor DatatypeSelector where -/
-/-   forIn dtCons init fold := forIn' [:dtCons.getNumSelectors] init fun idx h_member acc => -/
-/-     let selector := dtCons.getSelectorAt ⟨idx, h_member.upper⟩ -/
-/-     fold selector acc -/
+instance [Monad m] : ForIn m DatatypeConstructor DatatypeSelector where
+  forIn dtCons init fold := forIn' [:dtCons.getNumSelectors] init fun idx h_member acc =>
+    let selector := dtCons.getSelectorAt ⟨idx, h_member.upper⟩
+    fold selector acc
 
 end DatatypeConstructor
 
@@ -980,10 +980,10 @@ instance : GetElem Datatype Nat DatatypeConstructor
 where
   getElem dt idx h := dt.getConstructorAt ⟨idx, h⟩
 
-/- instance : ForIn m Datatype DatatypeConstructor where -/
-/-   forIn dt init fold := forIn' [:dt.getNumConstructors] init fun idx h_member acc => -/
-/-     let constructor := dt.getConstructorAt ⟨idx, h_member.upper⟩ -/
-/-     fold constructor acc -/
+instance [Monad m] : ForIn m Datatype DatatypeConstructor where
+  forIn dt init fold := forIn' [:dt.getNumConstructors] init fun idx h_member acc =>
+    let constructor := dt.getConstructorAt ⟨idx, h_member.upper⟩
+    fold constructor acc
 
 /-- Get the datatype selector with the given name.
 
