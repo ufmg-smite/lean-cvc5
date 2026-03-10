@@ -1047,8 +1047,17 @@ inductive Kind where
     - TermManager::mkInteger(const std::string&)
     - TermManager::mkInteger(int64_t)
   -/
-  | CONST_INTEGER
+  | CONST_INTEGER 
   /--
+  Real algebraic number constant. TODO: More detailed documentation.
+  -/
+  | REAL_ALGEBRAIC_NUMBER 
+  /--
+  Real algebraic number constant. TODO: More detailed documentation.
+  -/
+  | REAL_ALGEBRAIC_NUMBER_OP
+  /--  
+
   Less than, chainable.
   
   - Arity: ``n > 1``
