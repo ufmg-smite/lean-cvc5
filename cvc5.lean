@@ -1407,7 +1407,7 @@ extern_def!? getBitVectorValue : Term → UInt32 → Except Error String
 Requires 'term' to have a real algebraic number sort.
 -/
 
-extern_def!? getRealAgebraicNumberValue : Term → Except Error String
+extern_def!? getRealAlgebraicNumberValue : Term → Except Error String
 
 /-- Get the native integral value of an integral value. -/
 extern_def!? getIntegerValue : Term → Except Error Int
