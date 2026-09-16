@@ -2435,6 +2435,42 @@ inductive ProofRule where
   -/
   | ARITH_TRANS_SINE_APPROX_BELOW_POS
   /--
+  Receives a list of pairs `(p, r)` (representing point intervals) or triples `(p, l, r)`
+  (representing open intervals) , the list of all roots of all polynomials
+  in the problem and a list of pairs `(p, root_indices)`, where the indices point to the
+  list of all roots, corresponding to the roots of that polynomial. Concludes
+  SGN_INV(p, l, r) for each pair in the first argument, for which the interval is open,
+  and IS_ROOT(p, r) for each point interval. Requires as a side condition
+  that the list of roots is sorted in ascending order, the root list of each polynomial
+  is exhaustive, each interval does not contain a root of the corresponding polynomial
+  in its interior (for open intervals) and, for point intervals, that the point is indeed
+  a root of the polynomial.
+  -/
+  | VALIDATE_INTERVALS
+  /--
+  Generates a clause of the form `(x > i1_l /\ x < i1_r) \/ (x > i2_l /\ x < i2_r) ..`
+  Given a variable `x` and a list of intervals [i1, i2, ..]. Assumes that the intervals
+  cover the whole real line. If an endpoint of an interval is not finite then the
+  corresponding conjunct is omitted in the conclusion.
+  -/
+  | COVER
+  /--
+  Parameters: a variable `x`, a polynomial `p`, a rational `s` and two endpoints
+  `l` and `r`, as premises `SGN_INV(p, l, r)` and `p(x) ~ 0` (where ~ is either <, <=, =, >= or >)
+  (or (`\not p(x) ~ 0`)), and as side conditions `l < s < r` and `\not p(s) ~ 0` (or
+  `p(s) ~ 0`, if the premise was `\not p(x) ~ 0`). Concludes `\not (x > l \and x < r)`.
+  If `l` is `MINUS_INFINITY` then terms that mention it are omitted, and the same for `r`
+  if it is `PLUS_INFINITY`. If the interval is the whole line then the conclusion is `false`.
+  -/
+  | SGN_INV_ELIM
+  /--
+  Parameters: a variable `x`, a real algebraic number `r` and a polynomial `p`.
+  Premises: IS_ROOT(p, r) and one of: `p(x) != 0`, `p(x) < 0`, `p(x) > 0`,
+  `not (p(x) >= 0)` or `not (p(x) <= 0)`.
+  Concludes: x != r
+  -/
+  | RAN_EVAL
+  /--
   Proof rule for univariate coverings.
   -/
   | ARITH_COVERINGS_UNIV
