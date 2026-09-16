@@ -31,7 +31,9 @@ def cvc5.arch :=
   if Platform.target.startsWith "x86_64" then "x86_64"
   else "arm64"
 
-def cvc5.target := s!"{os}-{arch}-static"
+def cvc5.target :=
+  if Platform.isWindows || Platform.isOSX then s!"{os}-{arch}-static"
+  else s!"{os}-{arch}-libcxx-static"
 
 open IO.Process in
 def generateEnums (cppDir : FilePath) (pkg : NPackage __name__) : IO Unit := do
@@ -63,7 +65,7 @@ target cvc5Enums pkg : Unit := do
   let cvc5Dir := pkg.dir / s!"cvc5-{cvc5.target}"
   let zipPath := cvc5Dir.addExtension "zip"
   let url := s!"{cvc5.url}/{cvc5.version}/cvc5-{cvc5.target}.zip"
-  addPureTrace #["url"] url
+  addPureTrace url (caption := "url")
   -- NOTE: it is intentional that we RUN the job in the "computing build
   -- jobs" phase, since otherwise we run into a potential race condition due
   -- to the expected `input_file`s not actually existing.
