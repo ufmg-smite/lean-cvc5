@@ -119,12 +119,14 @@ input_file libpicpoly where
 input_file libpicpolyxx where
   path := s!"cvc5-{cvc5.target}" / "lib" / nameToStaticLib "picpolyxx" true
 
+input_file libcocoa where
+  path := s!"cvc5-{cvc5.target}" / "lib" / nameToStaticLib "cocoa" true
 
 def libs : Array (Target FilePath) :=
   if Platform.isWindows then
-    #[ffi.o, libcadical, libcvc5, libcvc5parser, libgmp, libpicpoly, libpicpolyxx]
+    #[ffi.o, libcadical, libcvc5, libcvc5parser, libgmp, libpicpoly, libpicpolyxx, libcocoa]
   else
-    #[ffi.o, libcadical, libcvc5, libcvc5parser, libgmp, libgmpxx, libpicpoly, libpicpolyxx]
+    #[ffi.o, libcadical, libcvc5, libcvc5parser, libgmp, libgmpxx, libpicpoly, libpicpolyxx, libcocoa]
 
 @[default_target]
 lean_lib cvc5 where
