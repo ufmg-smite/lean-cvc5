@@ -20,7 +20,7 @@ def uncompress (file : FilePath) (dir : FilePath) : LogIO PUnit := do
 
 def cvc5.url := "https://github.com/ufmg-smite/cvc5/releases/download"
 
-def cvc5.version := "NL-univ-proofs-fine-grained"
+def cvc5.version := "NL-univ-proofs-fine-grained-2"
 
 def cvc5.os :=
   if Platform.isWindows then "Win64"

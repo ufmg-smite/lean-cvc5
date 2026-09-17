@@ -1049,6 +1049,28 @@ inductive Kind where
   -/
   | CONST_INTEGER
   /--
+  Root predicate
+  TODO: Add better documentation
+  -/
+  | IS_ROOT
+  /--
+  Negative infinity marker, used as a bound in the univariate coverings
+  calculus (see SGN_INV).
+  TODO: Add better documentation
+  -/
+  | COV_MINUS_INFINITY
+  /--
+  Positive infinity marker, used as a bound in the univariate coverings
+  calculus (see SGN_INV).
+  TODO: Add better documentation
+  -/
+  | COV_PLUS_INFINITY
+  /--
+  Sign invariance predicate
+  TODO: Add better documentation
+  -/
+  | SGN_INV
+  /--
   Real Algebraic Number Constant
   TODO: Add better documentation
   -/
