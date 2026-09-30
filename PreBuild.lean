@@ -424,7 +424,7 @@ def prettyError
   (content : String) (ι : content.Pos) (msg : String)
 : IO String := do
   let pos := Parsec.Input.pos (⟨content, ι⟩ : Sigma String.Pos)
-  let map := content.toFileMap
+  let map := Lean.FileMap.ofString content
   let position := map.toPosition pos
   let char := String.Pos.Raw.get? content pos
   let charStr := match char with
@@ -460,7 +460,7 @@ def prettyError
 
 def presentError (content : String) (ι : content.Pos) (msg : String) : IO Lean.Position := do
   let pos := Parsec.Input.pos (⟨content, ι⟩ : Sigma String.Pos)
-  let map := content.toFileMap
+  let map := Lean.FileMap.ofString content
   let position := map.toPosition pos
   let char := String.Pos.Raw.get? content pos
   let charStr := match char with

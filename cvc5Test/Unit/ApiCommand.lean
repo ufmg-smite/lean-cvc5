@@ -28,7 +28,7 @@ test![TestApiBlackCommand, invoke] tm => do
   let _ ← cmd.invoke solver sm
   cmd ← parseCommand parser "(get-model)"
   assertFalse cmd.isNull
-  let output ← String.trim <$> cmd.invoke solver sm
+  let output ← (·.trimAscii.copy) <$> cmd.invoke solver sm
   assertEq output
     "(error \"cannot get model unless model generation is enabled (try --produce-models)\")"
   assertError "Only one set-logic is allowed." do

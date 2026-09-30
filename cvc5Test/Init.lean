@@ -1,5 +1,3 @@
-import Lean.Server.Utils
-
 import cvc5
 
 namespace cvc5
@@ -18,7 +16,7 @@ def IO.run : IO Unit → IO Unit :=
   id
 
 def fail {α : outParam Type} (msg : String) : IO α :=
-  IO.throwServerError msg
+  throw (IO.userError msg)
 
 protected def pref (hint : String) : String :=
   if hint.isEmpty then "" else "[" ++ hint ++ "] "
@@ -76,7 +74,7 @@ def assertError
     (hint := hint)
     fun
     | .error err => do
-      if err.trim = expected.trim then
+      if err.trimAscii.copy = expected.trimAscii.copy then
         return ()
       else
         IO.eprintln s!"{Test.pref hint}expected cvc5 error `{expected}`, got cvc5 error `{err}`"
