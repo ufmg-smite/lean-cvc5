@@ -1409,6 +1409,25 @@ Requires 'term' to have a real algebraic number sort.
 
 extern_def!? getRealAlgebraicNumberValue : Term → Except Error String
 
+/-- Determine if this term is a real algebraic number witness, i.e., a real algebraic number together
+with the Sturm sequence of its defining polynomial. -/
+extern_def isRealAlgebraicNumberWitness : Term → Bool
+
+/-- Get the real algebraic number of a real algebraic number witness.
+
+Requires `isRealAlgebraicNumberWitness`. The result is a real algebraic number term.
+-/
+extern_def!? getRealAlgebraicNumberWitnessNumber : Term → Except Error Term
+
+/-- Get the Sturm sequence of a real algebraic number witness, i.e., the Sturm sequence of the
+defining polynomial of its real algebraic number.
+
+Requires `isRealAlgebraicNumberWitness`. Each element is an s-expression `(a b)` where `b` is the
+polynomial of the sequence and `a` is the pseudo-quotient of the two preceding elements, of which `b`
+is the remainder up to a constant factor (zero for the first two).
+-/
+extern_def!? getRealAlgebraicNumberWitnessSturmSequence : Term → Except Error (Array Term)
+
 /-- Get the native integral value of an integral value. -/
 extern_def!? getIntegerValue : Term → Except Error Int
 

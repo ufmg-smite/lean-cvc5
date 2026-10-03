@@ -989,6 +989,34 @@ LEAN_EXPORT lean_obj_res term_getRealAlgebraicNumberValue(lean_obj_arg t)
   CVC5_LEAN_API_TRY_CATCH_EXCEPT_END;
 }
 
+LEAN_EXPORT uint8_t term_isRealAlgebraicNumberWitness(lean_obj_arg t)
+{
+  return bool_box(term_unbox(t)->isRealAlgebraicNumberWitness());
+}
+
+LEAN_EXPORT lean_obj_res term_getRealAlgebraicNumberWitnessNumber(lean_obj_arg t)
+{
+  CVC5_LEAN_API_TRY_CATCH_EXCEPT_BEGIN;
+  return except_ok(
+      term_box(new Term(term_unbox(t)->getRealAlgebraicNumberWitnessNumber())));
+  CVC5_LEAN_API_TRY_CATCH_EXCEPT_END;
+}
+
+LEAN_EXPORT lean_obj_res term_getRealAlgebraicNumberWitnessSturmSequence(
+    lean_obj_arg t)
+{
+  CVC5_LEAN_API_TRY_CATCH_EXCEPT_BEGIN;
+  std::vector<Term> seq =
+      term_unbox(t)->getRealAlgebraicNumberWitnessSturmSequence();
+  lean_object* as = lean_mk_empty_array();
+  for (const Term& s : seq)
+  {
+    as = lean_array_push(as, term_box(new Term(s)));
+  }
+  return except_ok(as);
+  CVC5_LEAN_API_TRY_CATCH_EXCEPT_END;
+}
+
 LEAN_EXPORT lean_obj_res term_getIntegerValue(lean_obj_arg t)
 {
   CVC5_LEAN_API_TRY_CATCH_EXCEPT_BEGIN;
