@@ -113,7 +113,7 @@ inductive SkolemId where
   -/
   | MOD_BY_ZERO
   /--
-  A function introduced to eliminate extended trancendental functions.
+  A function introduced to eliminate extended transcendental functions.
   Transcendental functions like sqrt, arccos, arcsin, etc. are replaced
   during processing with uninterpreted functions that are unique to
   each function.
@@ -123,16 +123,16 @@ inductive SkolemId where
     `(lambda ((x Real)) (sqrt x))`.
   - Sort: ``(-> Real Real)``
   
-  The term `(@trancendental_purify f)` is equivalent to `f`.
+  The term `(@transcendental_purify f)` is equivalent to `f`.
   -/
   | TRANSCENDENTAL_PURIFY
   /--
-  Argument used to purify trancendental function app ``(f x)``.
+  Argument used to purify transcendental function app ``(f x)``.
   For ``(sin x)``, this is a variable that is assumed to be in phase with
   ``x`` that is between ``-pi`` and ``pi``.
   
   - Number of skolem indices: ``1``
-    - ``1:`` The application of a trancendental function.
+    - ``1:`` The application of a transcendental function.
   - Sort: ``Real``
   -/
   | TRANSCENDENTAL_PURIFY_ARG
@@ -170,7 +170,7 @@ inductive SkolemId where
   infinity.  This skolem is expected to appear in instantiations
   and immediately be rewritten via virtual term substitution.
   
-  - Number of skolem indices: ``0``
+  - Number of skolem indices: ``1``
     - ``1:`` A term that represents an arithmetic sort (Int or Real).
   - Sort: The sort given by the index.
   -/
@@ -180,13 +180,13 @@ inductive SkolemId where
   infinity. Unlike ARITH_VTS_INFINITY, this skolem may appear in
   lemmas.
   
-  - Number of skolem indices: ``0``
+  - Number of skolem indices: ``1``
     - ``1:`` A term that represents an arithmetic sort (Int or Real).
   - Sort: The sort given by the index.
   -/
   | ARITH_VTS_INFINITY_FREE
   /--
-  A shared datatype selector, see Reynolds et. al. "Datatypes with Shared
+  A shared datatype selector, see Reynolds et al. "Datatypes with Shared
   Selectors", IJCAR 2018. Represents a selector that can extract fields
   of multiple constructors.
   
@@ -200,10 +200,10 @@ inductive SkolemId where
   -/
   | SHARED_SELECTOR
   /--
-  The higher-roder diff skolem, which is the witness k for the inference
+  The higher-order diff skolem, which is the witness k for the inference
   ``(=> (not (= A B)) (not (= (A k1 ... kn) (B k1 ... kn))))``.
   
-  - Number of skolem indices: ``2``
+  - Number of skolem indices: ``3``
     - ``1:`` The first function of sort ``(-> T1 ... Tn T)``.
     - ``2:`` The second function of sort ``(-> T1 ... Tn T)``.
     - ``3:`` The argument index i.
@@ -292,7 +292,7 @@ inductive SkolemId where
   Difference index for string disequalities, such that k is the witness for
   the inference
    ``(=> (not (= a b)) (not (= (substr a k 1) (substr b k 1))))``
-  where note that `k` may be out of bounds for at most of a,b.
+  where note that `k` may be out of bounds for at most one of `a` and `b`.
   
   - Number of skolem indices: ``2``
     - ``1:`` The first string.
@@ -301,18 +301,32 @@ inductive SkolemId where
   -/
   | STRINGS_DEQ_DIFF
   /--
-  A function used to define intermediate results of str.replace_all and
-  str.replace_re_all applications. This denotes a function that denotes the
-  result of processing the string or sequence after processing the n^th
-  occurrence of string or match of the regular expression in the given
-  replace_all term.
+  A function used to define intermediate results of str.replace_all
+  applications. This denotes a function that denotes the result of processing
+  the string or sequence after processing the n^th occurrence of the string
+  in the given replace_all term.
   
-  - Number of skolem indices: ``1``
-    - ``1:`` The application of replace_all or replace_all_re.
+  - Number of skolem indices: ``3``
+    - ``1:`` The string or sequence to process.
+    - ``2:`` The string or sequence to replace.
+    - ``3:`` The replacement string or sequence.
   - Sort: ``(-> Int S)`` where S is either ``String`` or ``(Seq T)`` for
   some ``T``.
   -/
   | STRINGS_REPLACE_ALL_RESULT
+  /--
+  A function used to define intermediate results of str.replace_re_all
+  applications. This denotes a function that denotes the result of processing
+  the string after processing the n^th match of the regular expression in the
+  given replace_re_all term.
+  
+  - Number of skolem indices: ``3``
+    - ``1:`` The string to process.
+    - ``2:`` The regular expression to match.
+    - ``3:`` The replacement string.
+  - Sort: ``(-> Int String)``
+  -/
+  | STRINGS_REPLACE_RE_ALL_RESULT
   /--
   A function used to define intermediate results of str.from_int
   applications. This is a function k denoting the result
@@ -323,20 +337,20 @@ inductive SkolemId where
   - Sort: ``(-> Int Int)``
   
   The term `(@strings_itos_result n)` is equivalent to
-  `(lambda ((x Int)) (str.from_int (mod n (^ 10 x)))`.
+  `(lambda ((x Int)) (ite (= x 0) 0 (str.to_int (str.substr (str.from_int n) 0 x))))`.
   -/
   | STRINGS_ITOS_RESULT
   /--
-  A function used to define intermediate results of str.from_int
-  applications. This is a function k of type ``(-> Int String)`` denoting the
+  A function used to define intermediate results of str.to_int
+  applications. This is a function k of type ``(-> Int Int)`` denoting the
   result of processing the first n characters of the argument.
   
   - Number of skolem indices: ``1``
     - ``1:`` The argument to str.to_int.
-  - Sort: ``(-> Int String)``
+  - Sort: ``(-> Int Int)``
   
   The term `(@strings_stoi_result s)` is equivalent to
-  `(lambda ((x Int)) (str.to_int (str.substr s 0 x)))`.
+  `(lambda ((x Int)) (ite (= x 0) 0 (str.to_int (str.substr s 0 x))))`.
   -/
   | STRINGS_STOI_RESULT
   /--

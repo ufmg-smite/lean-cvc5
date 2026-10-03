@@ -1081,6 +1081,21 @@ inductive Kind where
   -/
   | REAL_ALGEBRAIC_NUMBER_OP
   /--
+  Real algebraic number together with a Sturm sequence of its defining
+  polynomial, witnessing that the number is well defined.
+  
+  - Arity: ``1``
+  
+    - ``1:`` The Sturm sequence, as an s-expression of Terms of Sort Real
+  
+  - Indices: ``1``
+  
+    - ``1:`` The real algebraic number
+  
+  TODO: Add better documentation
+  -/
+  | REAL_ALGEBRAIC_NUMBER_WITNESS
+  /--
   Less than, chainable.
   
   - Arity: ``n > 1``
@@ -5804,12 +5819,12 @@ inductive Kind where
   /--
   Instantiation no-pattern.
   
-  Specifies a (list of) terms that should not be used as a pattern for
-  quantifier instantiation.
+  Specifies a term that should not be used as a pattern for quantifier
+  instantiation.
   
-  - Arity: ``n > 0``
+  - Arity: ``1``
   
-    - ``1..n:`` Terms of any Sort
+    - ``1:`` Term of any Sort
   
   - Create Term of this Kind with:
   

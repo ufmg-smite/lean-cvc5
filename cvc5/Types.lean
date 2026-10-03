@@ -253,10 +253,6 @@ inductive ProofFormat where
   -/
   | DOT
   /--
-  Output LFSC proof. 
-  -/
-  | LFSC
-  /--
   Output Alethe proof. 
   -/
   | ALETHE
